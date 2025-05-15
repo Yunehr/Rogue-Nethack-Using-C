@@ -1,40 +1,67 @@
 #include "rogue.h"
 
-Room * createRoom(int x, int y, int height, int width) {
+Room * createRoom(int grid) {
 
     Room * newRoom;
     newRoom = malloc(sizeof(Room)); // Allocate memory for the room
 
-    // basic room setup
-    newRoom->position.x = x;
-    newRoom->position.y = y;
-    newRoom->height = height;
-    newRoom->width = width;
+    switch (grid) {
+        case 0:
+            newRoom->position.x = 0;
+            newRoom->position.y = 0;
+            break;
+        case 1:
+            newRoom->position.x = 33;
+            newRoom->position.y = 0;
+            break;
+        case 2:
+            newRoom->position.x = 66;
+            newRoom->position.y = 0;
+            break;
+        case 3:
+            newRoom->position.x = 0;
+            newRoom->position.y = 14;
+            break;
+        case 4:
+            newRoom->position.x = 33;
+            newRoom->position.y = 14;
+            break;
+        case 5:
+            newRoom->position.x = 66;
+            newRoom->position.y = 14;
+            break;
+    }
 
-    // randomize door positions
-    srand(time(NULL)); // Seed the random number generator
+    newRoom->height = rand() % 6 + 4; // max size 9
+    newRoom->width = rand() % 14 + 4; // max size 17
+
+
+    // offset
+    newRoom->position.y += rand() % (9 - newRoom->height + 1);
+    newRoom->position.x += rand() % (29 - newRoom->width + 1);
+    
 
     newRoom->doors = malloc(sizeof(Position) * 4); // Allocate memory for the doors
 
     // top door
     newRoom->doors[0] = malloc(sizeof(Position)); // Allocate memory for the door
-    newRoom->doors[0]->x = rand() % ((width + x - 1) - (x + 1)) + (x + 1);
-    newRoom->doors[0]->y = y;
+    newRoom->doors[0]->x = rand() % ((newRoom->width + newRoom->position.x - 1) - (newRoom->position.x + 1)) + (newRoom->position.x + 1);
+    newRoom->doors[0]->y = newRoom->position.y;
 
     // right door
     newRoom->doors[1] = malloc(sizeof(Position)); // Allocate memory for the door
-    newRoom->doors[1]->x = x + width - 1;
-    newRoom->doors[1]->y = rand() % ((height + y - 1) - (y + 1)) + (y + 1);
+    newRoom->doors[1]->x = newRoom->position.x + newRoom->width - 1;
+    newRoom->doors[1]->y = rand() % ((newRoom->height + newRoom->position.y - 1) - (newRoom->position.y + 1)) + (newRoom->position.y + 1);
 
     // bottom door
     newRoom->doors[2] = malloc(sizeof(Position)); // Allocate memory for the door
-    newRoom->doors[2]->x = rand() % ((width + x - 1) - (x + 1)) + (x + 1);
-    newRoom->doors[2]->y = y + height - 1;
+    newRoom->doors[2]->x = rand() % ((newRoom->width + newRoom->position.x - 1) - (newRoom->position.x + 1)) + (newRoom->position.x + 1);
+    newRoom->doors[2]->y = newRoom->position.y + newRoom->height - 1;
     
     // left door
     newRoom->doors[3] = malloc(sizeof(Position)); // Allocate memory for the door
-    newRoom->doors[3]->x = x;
-    newRoom->doors[3]->y = rand() % ((height + y - 1) - (y + 1)) + (y + 1);
+    newRoom->doors[3]->x = newRoom->position.x;
+    newRoom->doors[3]->y = rand() % ((newRoom->height + newRoom->position.y - 1) - (newRoom->position.y + 1)) + (newRoom->position.y + 1);
 
     return newRoom;
 }
