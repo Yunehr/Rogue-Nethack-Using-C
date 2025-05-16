@@ -74,6 +74,7 @@ int printGameHub(Level * level);
 Level * createLevel(int level);
 Room ** roomsSetup();
 char ** saveLevelPositions();
+void connectDoors(Level * level);
 
 /* player functions */
 Player * playerSetUp();
@@ -85,7 +86,6 @@ int playerMove(Position * newPosition, Player * user, char ** level);
 /* room functions */
 Room * createRoom(int grid, int numberOfDoors);
 int drawRoom(Room* room);
-//int connectDoors(Position* door1, Position* door2);
 
 /* monster functions */
 int addMonsters(Level* level);

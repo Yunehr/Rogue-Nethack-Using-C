@@ -100,26 +100,25 @@ int pathFind(Position * start, Position * end) {
 
     while (y != start->y || x != start->x) {
         // Check bounds before accessing cameFrom
-    if (y < 0 || y >= MAX_HEIGHT || x < 0 || x >= MAX_WIDTH) {
-        break; // Out of bounds, stop to avoid segfault
-    }
-    int prevY = cameFrom[y][x][0];
-    int prevX = cameFrom[y][x][1];
-    if (prevY == -1 || prevX == -1) {
-        break; // No valid path, stop
-    }
-    y = prevY;
-    x = prevX;
+        if (y < 0 || y >= MAX_HEIGHT || x < 0 || x >= MAX_WIDTH) {
+            break; // Out of bounds, stop to avoid segfault
+        }
+        int prevY = cameFrom[y][x][0];
+        int prevX = cameFrom[y][x][1];
+        if (prevY == -1 || prevX == -1) {
+            break; // No valid path, stop
+        }
+        y = prevY;
+        x = prevX;
 
-    // Draw the path
-    char temp = mvinch(y, x);
-    if (temp != '+'){
-        mvprintw(y, x, "#");
-    }
-    else{
-        // nothing
-    }
-    getch(); // for testing purposes
+        // Draw the path
+        char temp = mvinch(y, x);
+        if (temp != '+'){
+            mvprintw(y, x, "#");
+        }
+        else{
+            // nothing
+        }
     }
 
 }

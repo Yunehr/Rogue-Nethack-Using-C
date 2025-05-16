@@ -2,11 +2,9 @@
 
 int screenSetUp() {
     initscr(); // Initialize the window
-    printw("Rogue Nethack!");
     noecho(); // Don't echo user input
-
+    keypad(stdscr, TRUE); // Enable keypad input
     refresh(); // Print it on to the real screen
-
 
     return 1;
 }

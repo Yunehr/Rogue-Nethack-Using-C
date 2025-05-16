@@ -1,37 +1,61 @@
 #include "rogue.h"
+#include "mainMenu.h"
 
-int main() {
-    srand(time(NULL)); // Seed the random number generator
+int gameLoop() {
+    srand(time(NULL)); 
 
-    // Player * user;
     int ch;
-
     Position * newPosition;
-
     Level * level;
 
-    screenSetUp();
-
-    level = createLevel(1); // Create the level
-
-    printGameHub(level); // Print the game hub
-
-    move(level->user->position->y, level->user->position->x); // Move the cursor to the player position
+    level = createLevel(1);
+    printGameHub(level);
 
     /* main game loop */
-    while ((ch = getch()) != 'q') { // Wait for user input
-        printGameHub(level); // Print the game hub
-        /* Player Movement */
+    while ((ch = getch()) != 'q') { 
+        printGameHub(level); 
         newPosition = handleInput(ch, level->user);  
-        checkPosition(newPosition, level); // Check the new position
-
-        /* Monster Movement */
-        moveMonsters(level); // Move the monsters
-
-        /* Move Cursor back to player */
+        checkPosition(newPosition, level); 
+        moveMonsters(level); 
         move(level->user->position->y, level->user->position->x); 
+
+        if (level->user->health <= 0) {
+            return -1; // Game over
+        }
     }
 
+    return 0;
+}
+
+void menuLoop(){
+    int choice;
+    char * choices[] = {
+        "Start Game",
+        "End Game",
+    };
+
+    while (true) {
+        choice = mainMenu(2, choices);
+
+        switch (choice) {
+            case START_GAME:
+                gameLoop();
+                clear();
+                // Start the game
+                break;
+            case END_GAME:
+                // End the game
+                return;
+            default:
+                break;
+        }
+    }
+}
+
+int main() {
+
+    screenSetUp();
+    menuLoop();    
     endwin(); // End the window
     
     return 0;

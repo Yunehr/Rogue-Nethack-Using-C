@@ -6,13 +6,10 @@ Level * createLevel(int level) {
     newLevel = malloc(sizeof(Level)); // Allocate memory for the level
 
     newLevel->level = level;
-    newLevel->numRooms = 3; // Set the number of rooms
+    newLevel->numRooms = 6; // Set the number of rooms
     newLevel->rooms = roomsSetup(); // Call the room setup function
+    connectDoors(newLevel); // Connect the doors between the rooms
     newLevel->tiles = saveLevelPositions(); // Save room locations
-    
-    //pathFind(newLevel->rooms[0]->doors[1], newLevel->rooms[1]->doors[3]); // Find a path between the rooms
-    //newLevel->tiles = saveLevelPositions(); // Save the level positions again after pathfinding
-    
 
     newLevel->user = playerSetUp(); // Set up the player
     placePlayer(newLevel->rooms, newLevel->user); // Place the player in a random room
@@ -31,14 +28,39 @@ Room ** roomsSetup() {
         rooms[x] = createRoom(x, 4); //hardcoded for now
         drawRoom(rooms[x]);
     }
-    
-    
-
-    /* connect doors between rooms */
-    pathFind(rooms[0]->doors[1]->position, rooms[1]->doors[3]->position);
-
 
     return rooms;
+}
+
+void connectDoors(Level * level){
+    int randomRoom, randomDoor;
+    int count;
+
+    for (int i = 0; i < level->numRooms; i++) {
+        for (int j = 0; j < level->rooms[i]->numberOfDoors; j++) {
+            
+            if (level->rooms[i]->doors[j]->connected == 1) {
+                continue; // Skip if the door is already connected
+            }
+
+            count = 0;
+
+            while (count < 1) {
+                randomRoom = rand() % level->numRooms; // Randomly select a room
+                randomDoor = rand() % level->rooms[randomRoom]->numberOfDoors; // Randomly select a door
+                
+                if (level->rooms[randomRoom]->doors[randomDoor]->connected == 1 || randomRoom == i) {
+                    count ++; 
+                    continue; // Skip if the door is already connected
+                }
+                
+                pathFind(level->rooms[i]->doors[j]->position, level->rooms[randomRoom]->doors[randomDoor]->position); // Connect the doors
+                level->rooms[i]->doors[j]->connected = 1; // Mark the door as connected
+                level->rooms[randomRoom]->doors[randomDoor]->connected = 1; // Mark the door as connected
+                break;
+            }
+        }
+    }
 }
 
 char ** saveLevelPositions(){
