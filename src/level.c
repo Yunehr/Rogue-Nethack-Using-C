@@ -1,4 +1,5 @@
 #include "rogue.h"
+#include "utils.h"
 
 Level * createLevel(int level) {
     Level * newLevel;
@@ -7,7 +8,11 @@ Level * createLevel(int level) {
     newLevel->level = level;
     newLevel->numRooms = 3; // Set the number of rooms
     newLevel->rooms = roomsSetup(); // Call the room setup function
-    newLevel->tiles = saveLevelPositions(); // Save the level positions
+    newLevel->tiles = saveLevelPositions(); // Save room locations
+    
+    //pathFind(newLevel->rooms[0]->doors[1], newLevel->rooms[1]->doors[3]); // Find a path between the rooms
+    //newLevel->tiles = saveLevelPositions(); // Save the level positions again after pathfinding
+    
 
     newLevel->user = playerSetUp(); // Set up the player
     placePlayer(newLevel->rooms, newLevel->user); // Place the player in a random room
@@ -23,15 +28,14 @@ Room ** roomsSetup() {
     rooms = malloc(sizeof(Room*) * 6); // Allocate memory for the rooms
     
     for (int x = 0; x < 6; x++) {
-        rooms[x] = createRoom(x);
+        rooms[x] = createRoom(x, 4); //hardcoded for now
         drawRoom(rooms[x]);
     }
     
     
 
     /* connect doors between rooms */
-    connectDoors(rooms[0]->doors[1], rooms[2]->doors[3]);
-    connectDoors(rooms[0]->doors[0], rooms[1]->doors[2]);
+    pathFind(rooms[0]->doors[1]->position, rooms[1]->doors[3]->position);
 
 
     return rooms;
@@ -40,11 +44,11 @@ Room ** roomsSetup() {
 char ** saveLevelPositions(){
     int x, y;
     char ** positions;
-    positions = malloc(sizeof(char*) * 25); // Allocate memory for the level
+    positions = malloc(sizeof(char*) * MAX_HEIGHT); // Allocate memory for the level
 
-    for (y = 0; y < 25; y++) {
-        positions[y] = malloc(sizeof(char) * 100); // Allocate memory for each row
-        for (x = 0; x < 100; x++) {
+    for (y = 0; y < MAX_HEIGHT; y++) {
+        positions[y] = malloc(sizeof(char) * MAX_WIDTH); // Allocate memory for each row
+        for (x = 0; x < MAX_WIDTH; x++) {
             positions[y][x] = mvinch(y,x);
         }
     }

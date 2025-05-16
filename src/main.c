@@ -5,6 +5,7 @@ int main() {
 
     // Player * user;
     int ch;
+
     Position * newPosition;
 
     Level * level;
@@ -12,6 +13,7 @@ int main() {
     screenSetUp();
 
     level = createLevel(1); // Create the level
+
     printGameHub(level); // Print the game hub
 
     move(level->user->position->y, level->user->position->x); // Move the cursor to the player position
@@ -19,7 +21,6 @@ int main() {
     /* main game loop */
     while ((ch = getch()) != 'q') { // Wait for user input
         printGameHub(level); // Print the game hub
-
         /* Player Movement */
         newPosition = handleInput(ch, level->user);  
         checkPosition(newPosition, level); // Check the new position

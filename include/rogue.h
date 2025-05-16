@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+/*************** Struct Definitions *******************/
 typedef struct Level{
     char ** tiles;
     int level;
@@ -25,11 +26,16 @@ typedef struct Room {
     Position position;
     int height;
     int width;
-
-    Position ** doors; 
+    struct Door ** doors; 
+    int numberOfDoors;
     // Monster ** monsters;
     //Item ** items;
 } Room;
+
+typedef struct Door {
+    Position * position;
+    int connected;;
+} Door;
 
 typedef struct Player{
     
@@ -55,6 +61,11 @@ typedef struct Monster {
 
 } Monster;
 
+/*************** Global Variables *******************/
+#define MAX_HEIGHT 25
+#define MAX_WIDTH 100
+
+
 /* screen functions */
 int screenSetUp();
 int printGameHub(Level * level);
@@ -72,9 +83,9 @@ int checkPosition(Position* newPosition, Level * level);
 int playerMove(Position * newPosition, Player * user, char ** level);
 
 /* room functions */
-Room * createRoom(int grid);
+Room * createRoom(int grid, int numberOfDoors);
 int drawRoom(Room* room);
-int connectDoors(Position* door1, Position* door2);
+//int connectDoors(Position* door1, Position* door2);
 
 /* monster functions */
 int addMonsters(Level* level);
